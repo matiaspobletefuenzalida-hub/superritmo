@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Ritmo - Con Instrucciones</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700;900&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
+    <style>
+        :root {
+            --bg-color: #fff9c4; 
+            --surface: #ffffff;
+            --text-main: #2c3e50;
+            --btn-lvl1: #43B047; /* Verde Mario */
+            --btn-lvl2: #FBD000; /* Amarillo Mario */
+            --btn-lvl3: #E52521; /* Rojo Mario */
+            --accent: #049CD8;   /* Azul Mario */
+            --wildcard: #9c27b0; /* Morado mágico */
+            --border-radius: 24px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(#fff176 15%, transparent 15%);
+            background-size: 30px 30px;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-container {
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 20px 0px #fbc02d, 0 25px 40px rgba(0,0,0,0.1);
+            border: 5px solid #fff;
+            width: 100%;
+            max-width: 950px;
+            text-align: center;
+        }
+
+        h1.mario-title { 
+            font-family: 'Fredoka', sans-serif; 
+            font-weight: 900; 
+            font-size: 4.5rem; 
+            margin-bottom: 0.5rem; 
+            letter-spacing: 2px;
+            line-height: 1.1;
+            text-shadow: 
+                -4px -4px 0 #000,  
+                 4px -4px 0 #000,
+                -4px  4px 0 #000,
+                 4px  4px 0 #000,
+                 0px  6px 0 #000,
+                 0px 15px 10px rgba(0,0,0,0.3);
+        }
+
+        .mario-title span { display: inline-block; }
+        .mario-title span:nth-child(even) { transform: rotate(3deg) translateY(-3px); }
+        .mario-title span:nth-child(odd) { transform: rotate(-3deg) translateY(3px); }
+
+        .m-red { color: #E52521; }
+        .m-blue { color: #049CD8; }
+        .m-yellow { color: #FBD000; }
+        .m-green { color: #43B047; }
+
+        p.subtitle { 
+            font-weight: 900; 
+            color: #546e7a; 
+            margin-top: 10px;
+            margin-bottom: 1.5rem; 
+            font-size: 1.4rem; 
+        }
+
+        /* --- PANEL DE INSTRUCCIONES --- */
+        .instructions-panel {
+            background: #f4faff;
+            border: 4px solid var(--accent);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 8px 0 rgba(4, 156, 216, 0.2);
+        }
+
+        .instructions-panel h3 {
+            font-family: 'Fredoka', sans-serif;
+            color: var(--accent);
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .instruction-cards {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: white;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 15px;
+            flex: 1;
+            min-width: 180px;
+            box-shadow: 0 5px 0 #e0e0e0;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .note-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 5px;
+            line-height: 1;
+        }
+
+        .card h4 {
+            font-size: 1.2rem;
+            color: var(--text-main);
+            margin-bottom: 5px;
+        }
+
+        .card p {
+            font-size: 1rem;
+            color: #546e7a;
+            font-weight: 700;
+        }
+
+        .card strong {
+            color: var(--accent);
+        }
+
+        /* --- RESTO DEL JUEGO --- */
+        .difficulty-selector {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .diff-btn {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            top: 0;
+            text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+            border: 3px solid #000;
+            box-shadow: 0 6px 0px #000;
+        }
+
+        .btn-l1 { background-color: var(--btn-lvl1); }
+        .btn-l2 { background-color: var(--btn-lvl2); color: #000; text-shadow: none; }
+        .btn-l3 { background-color: var(--btn-lvl3); }
+
+        .diff-btn:active, .diff-btn.active {
+            top: 6px;
+            box-shadow: 0 0px 0px #000;
+        }
+
+        #game-area {
+            display: none;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #score-container {
+            width: 100%;
+            background: #fff;
+            padding: 30px 10px;
+            margin: 2rem 0;
+            border: 6px solid #000;
+            border-radius: var(--border-radius);
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            min-height: 60px; 
+        }
+
+        .btn-main {
+            border: 3px solid #000;
+            padding: 16px 32px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Fredoka', sans-serif;
+            color: white;
+            position: relative;
+            top: 0;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        .btn-refresh { background-color: var(--accent); box-shadow: 0 8px 0px #000; }
+        .btn-wildcard { background-color: var(--wildcard); box-shadow: 0 8px 0px #000; }
+
+        .btn-main:active { top: 8px; box-shadow: 0 0px 0px #000; }
+
+        @keyframes vanishMagic {
+            0% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+            40% { transform: scale(1.2) rotate(-15deg); filter: brightness(1.5); }
+            100% { transform: scale(0) rotate(180deg); filter: brightness(2); opacity: 0; }
+        }
+
+        .btn-wildcard.poof {
+            animation: vanishMagic 0.6s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+            pointer-events: none; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <h1 class="mario-title">
+        <span class="m-red">S</span><span class="m-blue">U</span><span class="m-yellow">P</span><span class="m-green">E</span><span class="m-red">R</span><br>
+        <span class="m-green">R</span><span class="m-blue">I</span><span class="m-red">T</span><span class="m-yellow">M</span><span class="m-green">O</span>
+    </h1>
+    <p class="subtitle" id="level-description">¡Elige un nivel para tu misión musical!</p>
+
+    <div class="instructions-panel">
+        <h3>📖 ¿Cómo jugar?</h3>
+        <div class="instruction-cards">
+            <div class="card">
+                <span class="note-icon">♩</span>
+                <h4>Negra (1 tiempo)</h4>
+                <p>¡Da un <strong>aplauso!</strong> 👏</p>
+            </div>
+            <div class="card">
+                <span class="note-icon" style="font-size: 3.5rem; line-height: 0.8;">𝅗𝅥</span>
+                <h4>Blanca (2 tiempos)</h4>
+                <p>¡Aplauso y un <strong>giro!</strong> 💫</p>
+            </div>
+            <div class="card">
+                <span class="note-icon" style="font-size: 2.8rem; line-height: 1.1;">𝄽</span>
+                <h4>Silencio (1 tiempo)</h4>
+                <p>Mano al frente <strong>(¡Stop!)</strong> ✋</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="difficulty-selector">
+        <button class="diff-btn btn-l1" onclick="startGame(1)">🍄 Nivel 1 (2 Compases)</button>
+        <button class="diff-btn btn-l2" onclick="startGame(2)">⭐ Nivel 2 (3 Compases)</button>
+        <button class="diff-btn btn-l3" onclick="startGame(3)">🔥 Nivel 3 (4 Compases)</button>
+    </div>
+
+    <div id="game-area">
+        <div id="score-container"></div>
+        <div class="action-buttons">
+            <button class="btn-main btn-refresh" onclick="renderNewExercise()">
+                ¡Nuevo Ritmo!
+            </button>
+            <button class="btn-main btn-wildcard" id="wildcard-btn" onclick="applyWildcard()">
+                ¡Pista Mágica!
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const { Renderer, Stave, StaveNote, Formatter, Annotation } = Vex.Flow;
+
+    let currentDifficulty = 1;
+    let hasStarted = false;
+    let currentMeasuresData = []; 
+
+    function startGame(level) {
+        if (!hasStarted) {
+            document.getElementById('game-area').style.display = 'flex';
+            hasStarted = true;
+        }
+        currentDifficulty = level;
+        document.querySelectorAll('.diff-btn').forEach((btn, i) => btn.classList.toggle('active', (i + 1) === level));
+        renderNewExercise();
+    }
+
+    function generateMeasureData(measureIndex) {
+        let beatsLeft = 4;
+        let notes = [];
+
+        while (beatsLeft > 0) {
+            let choice;
+            
+            if (currentDifficulty === 1) {
+                choice = Math.random() < 0.15 ? 'qr' : 'q';
+            } 
+            else if (currentDifficulty === 2) {
+                let rand = Math.random();
+                if (rand < 0.4 && beatsLeft >= 2) choice = 'h';
+                else if (rand < 0.8) choice = 'q';
+                else choice = 'qr';
+            } 
+            else {
+                let rand = Math.random();
+                if (rand < 0.33 && beatsLeft >= 2) choice = 'h';
+                else if (rand < 0.66) choice = 'q';
+                else choice = 'qr';
+            }
+
+            if (choice === 'h' && beatsLeft >= 2) {
+                notes.push({ keys: ["b/4"], duration: "h" });
+                beatsLeft -= 2;
+            } else {
+                if (choice === 'qr') notes.push({ keys: ["b/4"], duration: "qr", isRest: true });
+                else notes.push({ keys: ["b/4"], duration: "q" });
+                beatsLeft -= 1;
+            }
+        }
+        return notes;
+    }
+
+    function renderNewExercise() {
+        let numMeasures = currentDifficulty === 1 ? 2 : (currentDifficulty === 2 ? 3 : 4);
+        
+        currentMeasuresData = [];
+        for (let i = 0; i < numMeasures; i++) {
+            currentMeasuresData.push(generateMeasureData(i));
+        }
+
+        drawScore();
+        
+        const wildcardBtn = document.getElementById('wildcard-btn');
+        wildcardBtn.classList.remove('poof');
+        wildcardBtn.style.display = 'inline-flex';
+    }
+
+    function applyWildcard() {
+        const wildcardBtn = document.getElementById('wildcard-btn');
+        if (wildcardBtn.classList.contains('poof')) return;
+
+        currentMeasuresData.forEach(m => m.forEach(n => {
+            if (Math.random() < 0.4) n.showHint = true; 
+        }));
+
+        drawScore();
+        wildcardBtn.classList.add('poof');
+        setTimeout(() => { wildcardBtn.style.display = 'none'; }, 600);
+    }
+
+    function drawScore() {
+        const container = document.getElementById("score-container");
+        container.innerHTML = ""; 
+        
+        const renderer = new Renderer(container, Renderer.Backends.SVG);
+        
+        const measureWidth = 200;
+        const totalWidth = (currentMeasuresData.length * measureWidth) + 50;
+        renderer.resize(totalWidth, 150); 
+        
+        const context = renderer.getContext();
+        let x = 10;
+
+        currentMeasuresData.forEach((measureNotes, i) => {
+            const stave = new Stave(x, 20, measureWidth);
+            
+            const lines = stave.getConfigForLines();
+            lines[0].visible = false;
+            lines[1].visible = false;
+            lines[2].visible = true;
+            lines[3].visible = false;
+            lines[4].visible = false;
+            
+            if (i === 0) {
+                stave.addTimeSignature("4/4");
+            }
+            
+            if (i === currentMeasuresData.length - 1) {
+                stave.setEndBarType(Vex.Flow.Barline.type.END);
+            }
+            
+            stave.setContext(context).draw();
+
+            let vfNotes = measureNotes.map(n => {
+                const sn = new StaveNote({ keys: n.keys, duration: n.duration });
+                if (n.showHint) {
+                    let hint = n.duration === "h" ? "Ta-a" : (n.duration === "q" ? "Ta" : "Shh");
+                    sn.addModifier(new Annotation(hint).setVerticalJustification(4).setFont("Nunito", 14, "bold"));
+                }
+                return sn;
+            });
+
+            Formatter.FormatAndDraw(context, stave, vfNotes);
+            x += measureWidth;
+        });
+    }
+</script>
+</body>
+</html>
