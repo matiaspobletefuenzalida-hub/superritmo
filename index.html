@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Ritmo - Por Prof. Matías Poblete</title>
+    <title>Super Ritmo - Creado por Prof. Matías Poblete</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700;900&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
     <style>
@@ -15,7 +15,6 @@
             --btn-lvl2: #FBD000; 
             --btn-lvl3: #E52521; 
             --accent: #049CD8;   
-            --wildcard: #9c27b0; 
             --border-radius: 24px;
         }
 
@@ -41,6 +40,8 @@
             border-radius: var(--border-radius);
             box-shadow: 0 20px 0px #fbc02d, 0 25px 40px rgba(0,0,0,0.1);
             border: 5px solid #fff;
+            border-bottom: 12px solid #ffb300;
+            border-bottom-right-radius: 60px;
             width: 100%;
             max-width: 950px;
             text-align: center;
@@ -206,7 +207,7 @@
             flex-wrap: wrap;
             justify-content: center;
             min-height: 60px; 
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .btn-main {
@@ -228,30 +229,20 @@
         }
 
         .btn-refresh { background-color: var(--accent); box-shadow: 0 8px 0px #000; }
-        .btn-wildcard { background-color: var(--wildcard); box-shadow: 0 8px 0px #000; }
 
         .btn-main:active { top: 8px; box-shadow: 0 0px 0px #000; }
 
-        @keyframes vanishMagic {
-            0% { transform: scale(1) rotate(0deg); filter: brightness(1); }
-            40% { transform: scale(1.2) rotate(-15deg); filter: brightness(1.5); }
-            100% { transform: scale(0) rotate(180deg); filter: brightness(2); opacity: 0; }
-        }
-
-        .btn-wildcard.poof {
-            animation: vanishMagic 0.6s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
-            pointer-events: none; 
-        }
-
-        /* --- NUEVO: ESTILO PARA EL COPYRIGHT --- */
-        .copyright {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 2px dashed #e0e0e0;
-            font-size: 1rem;
-            color: #78909c;
-            font-weight: 700;
+        /* --- ESTILOS DEL CRÉDITO DEL PROFESOR --- */
+        .credito-profesor {
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #546e7a;
+            padding-bottom: 0.5rem;
         }
     </style>
 </head>
@@ -297,19 +288,16 @@
             <button class="btn-main btn-refresh" onclick="renderNewExercise()">
                 ¡Nuevo Ritmo!
             </button>
-            <button class="btn-main btn-wildcard" id="wildcard-btn" onclick="applyWildcard()">
-                ¡Pista Mágica!
-            </button>
         </div>
-        
-        <div class="copyright">
-            &copy; 2026 Programado por Profesor Matías Poblete
-        </div>
+    </div>
+
+    <div class="credito-profesor">
+        Creado por Profesor Matías Poblete
     </div>
 </div>
 
 <script>
-    const { Renderer, Stave, StaveNote, Formatter, Annotation } = Vex.Flow;
+    const { Renderer, Stave, StaveNote, Formatter } = Vex.Flow;
 
     let currentDifficulty = 1;
     let hasStarted = false;
@@ -369,23 +357,6 @@
         }
 
         drawScore();
-        
-        const wildcardBtn = document.getElementById('wildcard-btn');
-        wildcardBtn.classList.remove('poof');
-        wildcardBtn.style.display = 'inline-flex';
-    }
-
-    function applyWildcard() {
-        const wildcardBtn = document.getElementById('wildcard-btn');
-        if (wildcardBtn.classList.contains('poof')) return;
-
-        currentMeasuresData.forEach(m => m.forEach(n => {
-            if (Math.random() < 0.4) n.showHint = true; 
-        }));
-
-        drawScore();
-        wildcardBtn.classList.add('poof');
-        setTimeout(() => { wildcardBtn.style.display = 'none'; }, 600);
     }
 
     function drawScore() {
@@ -422,12 +393,7 @@
             stave.setContext(context).draw();
 
             let vfNotes = measureNotes.map(n => {
-                const sn = new StaveNote({ keys: n.keys, duration: n.duration });
-                if (n.showHint) {
-                    let hint = n.duration === "h" ? "Ta-a" : (n.duration === "q" ? "Ta" : "Shh");
-                    sn.addModifier(new Annotation(hint).setVerticalJustification(4).setFont("Nunito", 14, "bold"));
-                }
-                return sn;
+                return new StaveNote({ keys: n.keys, duration: n.duration });
             });
 
             Formatter.FormatAndDraw(context, stave, vfNotes);
