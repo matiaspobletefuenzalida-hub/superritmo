@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Ritmo - Con Instrucciones</title>
+    <title>Super Ritmo - Por Prof. Matías Poblete</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700;900&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
     <style>
@@ -11,11 +11,11 @@
             --bg-color: #fff9c4; 
             --surface: #ffffff;
             --text-main: #2c3e50;
-            --btn-lvl1: #43B047; /* Verde Mario */
-            --btn-lvl2: #FBD000; /* Amarillo Mario */
-            --btn-lvl3: #E52521; /* Rojo Mario */
-            --accent: #049CD8;   /* Azul Mario */
-            --wildcard: #9c27b0; /* Morado mágico */
+            --btn-lvl1: #43B047; 
+            --btn-lvl2: #FBD000; 
+            --btn-lvl3: #E52521; 
+            --accent: #049CD8;   
+            --wildcard: #9c27b0; 
             --border-radius: 24px;
         }
 
@@ -44,6 +44,7 @@
             width: 100%;
             max-width: 950px;
             text-align: center;
+            position: relative;
         }
 
         h1.mario-title { 
@@ -205,6 +206,7 @@
             flex-wrap: wrap;
             justify-content: center;
             min-height: 60px; 
+            margin-bottom: 1.5rem;
         }
 
         .btn-main {
@@ -239,6 +241,17 @@
         .btn-wildcard.poof {
             animation: vanishMagic 0.6s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
             pointer-events: none; 
+        }
+
+        /* --- NUEVO: ESTILO PARA EL COPYRIGHT --- */
+        .copyright {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px dashed #e0e0e0;
+            font-size: 1rem;
+            color: #78909c;
+            font-weight: 700;
+            font-family: 'Nunito', sans-serif;
         }
     </style>
 </head>
@@ -287,6 +300,10 @@
             <button class="btn-main btn-wildcard" id="wildcard-btn" onclick="applyWildcard()">
                 ¡Pista Mágica!
             </button>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2026 Programado por Profesor Matías Poblete
         </div>
     </div>
 </div>
