@@ -48,27 +48,6 @@
             position: relative;
         }
 
-        /* --- PANTALLA DE REGISTRO --- */
-        #registro-estudiante {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            padding: 20px;
-        }
-
-        .input-mario {
-            padding: 15px 25px;
-            font-size: 1.2rem;
-            border: 3px solid #000;
-            border-radius: 50px;
-            font-family: 'Nunito', sans-serif;
-            width: 80%;
-            max-width: 400px;
-            text-align: center;
-            outline: none;
-        }
-
         h1.mario-title { 
             font-family: 'Fredoka', sans-serif; 
             font-weight: 900; 
@@ -100,6 +79,39 @@
             margin-top: 10px;
             margin-bottom: 1.5rem; 
             font-size: 1.4rem; 
+        }
+
+        /* --- PANTALLA DE LOGIN --- */
+        #login-section {
+            background: #f4faff;
+            border: 4px solid var(--accent);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 8px 0 rgba(4, 156, 216, 0.2);
+        }
+
+        #login-section input {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 15px 25px;
+            border: 3px solid #000;
+            border-radius: 50px;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            outline: none;
+            box-shadow: 0 4px 0px #000;
+        }
+
+        #login-section input:focus {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0px #000;
         }
 
         /* --- PANEL DE INSTRUCCIONES --- */
@@ -140,9 +152,9 @@
             transition: transform 0.2s;
         }
 
-        .card h4 { font-size: 1.2rem; color: var(--text-main); margin-bottom: 5px; }
-        .card p { font-size: 1rem; color: #546e7a; font-weight: 700; }
-        .card strong { color: var(--accent); }
+        .card:hover {
+            transform: translateY(-5px);
+        }
 
         .note-icon {
             font-size: 3rem;
@@ -151,8 +163,27 @@
             line-height: 1;
         }
 
-        /* --- UI DEL JUEGO --- */
-        #game-content { display: none; } /* Oculto inicialmente */
+        .card h4 {
+            font-size: 1.2rem;
+            color: var(--text-main);
+            margin-bottom: 5px;
+        }
+
+        .card p {
+            font-size: 1rem;
+            color: #546e7a;
+            font-weight: 700;
+        }
+
+        .card strong {
+            color: var(--accent);
+        }
+
+        /* --- RESTO DEL JUEGO --- */
+        #game-content {
+            display: none; /* Oculto hasta que ingresen el nombre */
+            animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
 
         .difficulty-selector {
             display: flex;
@@ -171,7 +202,7 @@
             padding: 12px 28px;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
             top: 0;
             text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
@@ -193,12 +224,6 @@
             width: 100%;
             flex-direction: column;
             align-items: center;
-            animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes popIn {
-            0% { opacity: 0; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1); }
         }
 
         #score-container {
@@ -213,6 +238,15 @@
             overflow-x: auto;
         }
 
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            min-height: 60px; 
+            margin-bottom: 1rem;
+        }
+
         .btn-main {
             border: 3px solid #000;
             padding: 16px 32px;
@@ -221,22 +255,38 @@
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
             font-family: 'Fredoka', sans-serif;
             color: white;
             position: relative;
             top: 0;
             text-shadow: 1px 1px 0 #000;
-            background-color: var(--accent);
-            box-shadow: 0 8px 0px #000;
         }
 
-        .btn-main:active { top: 8px; box-shadow: 0 0px 0px #000; }
+        .btn-refresh { background-color: var(--accent); box-shadow: 0 8px 0px #000; }
+        .btn-play { background-color: var(--btn-lvl1); box-shadow: 0 8px 0px #000; margin-top: 10px;}
 
+        .btn-main:active { top: 8px; box-shadow: 0 0px 0px #000; }
+        .btn-main:disabled { filter: grayscale(100%); cursor: not-allowed; }
+
+        /* --- ESTILOS DEL CRÉDITO DEL PROFESOR --- */
         .credito-profesor {
             margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Nunito', sans-serif;
             font-weight: 800;
             font-size: 1.2rem;
             color: #546e7a;
+            padding-bottom: 0.5rem;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
@@ -247,15 +297,12 @@
         <span class="m-red">S</span><span class="m-blue">U</span><span class="m-yellow">P</span><span class="m-green">E</span><span class="m-red">R</span><br>
         <span class="m-green">R</span><span class="m-blue">I</span><span class="m-red">T</span><span class="m-yellow">M</span><span class="m-green">O</span>
     </h1>
-
-    <div id="registro-estudiante">
-        <p class="subtitle">¡Hola! Para comenzar tu aventura musical, dinos tu nombre:</p>
-        <form id="form-inicio">
-            <input type="text" id="nombre-niño" name="Nombre" class="input-mario" placeholder="Tu nombre aquí..." required>
-            <br><br>
-            <button type="submit" id="btn-comenzar" class="btn-main" style="background-color: var(--btn-lvl1);">
-                ¡Entrar al Juego! 🎮
-            </button>
+    
+    <div id="login-section">
+        <p class="subtitle" style="margin-bottom: 0;">¡Ingresa tu nombre para jugar!</p>
+        <form id="student-form" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+            <input type="text" id="student-name" placeholder="Tu nombre..." required autocomplete="off">
+            <button type="submit" class="btn-main btn-play" id="btn-submit">¡A Jugar! 🎮</button>
         </form>
     </div>
 
@@ -292,7 +339,7 @@
         <div id="game-area">
             <div id="score-container"></div>
             <div class="action-buttons">
-                <button class="btn-main" onclick="renderNewExercise()">
+                <button class="btn-main btn-refresh" onclick="renderNewExercise()">
                     ¡Nuevo Ritmo!
                 </button>
             </div>
@@ -305,40 +352,50 @@
 </div>
 
 <script>
-    // --- LÓGICA DE ENVÍO DE FORMULARIO ---
-    const formInicio = document.getElementById('form-inicio');
-    const registroDiv = document.getElementById('registro-estudiante');
-    const juegoDiv = document.getElementById('game-content');
-
-    formInicio.addEventListener('submit', function(e) {
+    // --- LÓGICA DE LOGIN Y ENVÍO DE CORREO ---
+    document.getElementById('student-form').addEventListener('submit', function(e) {
         e.preventDefault();
-        const nombre = document.getElementById('nombre-niño').value;
-        const btn = document.getElementById('btn-comenzar');
+        const studentName = document.getElementById('student-name').value.trim();
+        const btnSubmit = document.getElementById('btn-submit');
         
-        btn.innerText = "Cargando...";
-        btn.disabled = true;
+        if (!studentName) return;
 
+        // Cambiar estado del botón mientras envía
+        btnSubmit.innerText = "Entrando...";
+        btnSubmit.disabled = true;
+
+        // Enviar usando FormSubmit AJAX
         fetch("https://formsubmit.co/ajax/matias.poblete@slepcolchagua.cl", {
             method: "POST",
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
             body: JSON.stringify({
-                Estudiante: nombre,
-                Juego: "Super Ritmo",
-                _subject: "Nuevo Estudiante en Super Ritmo: " + nombre
+                Nombre_Estudiante: studentName,
+                Asunto: `🎮 Nuevo alumno en Super Ritmo: ${studentName}`,
+                Mensaje: `El estudiante ${studentName} acaba de entrar al juego Super Ritmo.`
             })
         })
-        .then(() => {
-            registroDiv.style.display = 'none';
-            juegoDiv.style.display = 'block';
+        .then(response => response.json())
+        .then(data => {
+            // Ocultar login y mostrar juego independientemente del resultado de la API
+            iniciarJuegoUI();
         })
-        .catch(() => {
-            // Entrar al juego incluso si falla el envío para no interrumpir la clase
-            registroDiv.style.display = 'none';
-            juegoDiv.style.display = 'block';
+        .catch(error => {
+            console.error(error);
+            // Si hay error de red, igual dejamos jugar al niño
+            iniciarJuegoUI();
         });
     });
 
-    // --- LÓGICA ORIGINAL VEXFLOW ---
+    function iniciarJuegoUI() {
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('game-content').style.display = 'block';
+    }
+
+
+    // --- LÓGICA DEL JUEGO (VEXFLOW) ---
     const { Renderer, Stave, StaveNote, Formatter } = Vex.Flow;
 
     let currentDifficulty = 1;
@@ -361,6 +418,7 @@
 
         while (beatsLeft > 0) {
             let choice;
+            
             if (currentDifficulty === 1) {
                 choice = Math.random() < 0.15 ? 'qr' : 'q';
             } 
@@ -391,25 +449,31 @@
 
     function renderNewExercise() {
         let numMeasures = currentDifficulty === 1 ? 2 : (currentDifficulty === 2 ? 3 : 4);
+        
         currentMeasuresData = [];
         for (let i = 0; i < numMeasures; i++) {
             currentMeasuresData.push(generateMeasureData(i));
         }
+
         drawScore();
     }
 
     function drawScore() {
         const container = document.getElementById("score-container");
         container.innerHTML = ""; 
+        
         const renderer = new Renderer(container, Renderer.Backends.SVG);
+        
         const measureWidth = 200;
         const totalWidth = (currentMeasuresData.length * measureWidth) + 50;
         renderer.resize(totalWidth, 150); 
+        
         const context = renderer.getContext();
         let x = 10;
 
         currentMeasuresData.forEach((measureNotes, i) => {
             const stave = new Stave(x, 20, measureWidth);
+            
             const lines = stave.getConfigForLines();
             lines[0].visible = false;
             lines[1].visible = false;
@@ -417,11 +481,20 @@
             lines[3].visible = false;
             lines[4].visible = false;
             
-            if (i === 0) stave.addTimeSignature("4/4");
-            if (i === currentMeasuresData.length - 1) stave.setEndBarType(Vex.Flow.Barline.type.END);
+            if (i === 0) {
+                stave.addTimeSignature("4/4");
+            }
+            
+            if (i === currentMeasuresData.length - 1) {
+                stave.setEndBarType(Vex.Flow.Barline.type.END);
+            }
             
             stave.setContext(context).draw();
-            let vfNotes = measureNotes.map(n => new StaveNote({ keys: n.keys, duration: n.duration }));
+
+            let vfNotes = measureNotes.map(n => {
+                return new StaveNote({ keys: n.keys, duration: n.duration });
+            });
+
             Formatter.FormatAndDraw(context, stave, vfNotes);
             x += measureWidth;
         });
