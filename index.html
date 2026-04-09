@@ -48,6 +48,27 @@
             position: relative;
         }
 
+        /* --- PANTALLA DE REGISTRO --- */
+        #registro-estudiante {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .input-mario {
+            padding: 15px 25px;
+            font-size: 1.2rem;
+            border: 3px solid #000;
+            border-radius: 50px;
+            font-family: 'Nunito', sans-serif;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            outline: none;
+        }
+
         h1.mario-title { 
             font-family: 'Fredoka', sans-serif; 
             font-weight: 900; 
@@ -119,9 +140,9 @@
             transition: transform 0.2s;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-        }
+        .card h4 { font-size: 1.2rem; color: var(--text-main); margin-bottom: 5px; }
+        .card p { font-size: 1rem; color: #546e7a; font-weight: 700; }
+        .card strong { color: var(--accent); }
 
         .note-icon {
             font-size: 3rem;
@@ -130,23 +151,9 @@
             line-height: 1;
         }
 
-        .card h4 {
-            font-size: 1.2rem;
-            color: var(--text-main);
-            margin-bottom: 5px;
-        }
+        /* --- UI DEL JUEGO --- */
+        #game-content { display: none; } /* Oculto inicialmente */
 
-        .card p {
-            font-size: 1rem;
-            color: #546e7a;
-            font-weight: 700;
-        }
-
-        .card strong {
-            color: var(--accent);
-        }
-
-        /* --- RESTO DEL JUEGO --- */
         .difficulty-selector {
             display: flex;
             flex-wrap: wrap;
@@ -164,7 +171,7 @@
             padding: 12px 28px;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.2s;
             position: relative;
             top: 0;
             text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
@@ -189,6 +196,11 @@
             animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
         #score-container {
             width: 100%;
             background: #fff;
@@ -201,15 +213,6 @@
             overflow-x: auto;
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            min-height: 60px; 
-            margin-bottom: 1rem;
-        }
-
         .btn-main {
             border: 3px solid #000;
             padding: 16px 32px;
@@ -218,31 +221,22 @@
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.1s;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
             font-family: 'Fredoka', sans-serif;
             color: white;
             position: relative;
             top: 0;
             text-shadow: 1px 1px 0 #000;
+            background-color: var(--accent);
+            box-shadow: 0 8px 0px #000;
         }
-
-        .btn-refresh { background-color: var(--accent); box-shadow: 0 8px 0px #000; }
 
         .btn-main:active { top: 8px; box-shadow: 0 0px 0px #000; }
 
-        /* --- ESTILOS DEL CRÉDITO DEL PROFESOR --- */
         .credito-profesor {
             margin-top: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Nunito', sans-serif;
             font-weight: 800;
             font-size: 1.2rem;
             color: #546e7a;
-            padding-bottom: 0.5rem;
         }
     </style>
 </head>
@@ -253,41 +247,55 @@
         <span class="m-red">S</span><span class="m-blue">U</span><span class="m-yellow">P</span><span class="m-green">E</span><span class="m-red">R</span><br>
         <span class="m-green">R</span><span class="m-blue">I</span><span class="m-red">T</span><span class="m-yellow">M</span><span class="m-green">O</span>
     </h1>
-    <p class="subtitle" id="level-description">¡Elige un nivel para tu misión musical!</p>
 
-    <div class="instructions-panel">
-        <h3>📖 ¿Cómo jugar?</h3>
-        <div class="instruction-cards">
-            <div class="card">
-                <span class="note-icon">♩</span>
-                <h4>Negra (1 tiempo)</h4>
-                <p>¡Da un <strong>aplauso!</strong> 👏</p>
-            </div>
-            <div class="card">
-                <span class="note-icon" style="font-size: 3.5rem; line-height: 0.8;">𝅗𝅥</span>
-                <h4>Blanca (2 tiempos)</h4>
-                <p>¡Aplauso y un <strong>giro!</strong> 💫</p>
-            </div>
-            <div class="card">
-                <span class="note-icon" style="font-size: 2.8rem; line-height: 1.1;">𝄽</span>
-                <h4>Silencio (1 tiempo)</h4>
-                <p>Mano al frente <strong>(¡Stop!)</strong> ✋</p>
+    <div id="registro-estudiante">
+        <p class="subtitle">¡Hola! Para comenzar tu aventura musical, dinos tu nombre:</p>
+        <form id="form-inicio">
+            <input type="text" id="nombre-niño" name="Nombre" class="input-mario" placeholder="Tu nombre aquí..." required>
+            <br><br>
+            <button type="submit" id="btn-comenzar" class="btn-main" style="background-color: var(--btn-lvl1);">
+                ¡Entrar al Juego! 🎮
+            </button>
+        </form>
+    </div>
+
+    <div id="game-content">
+        <p class="subtitle" id="level-description">¡Elige un nivel para tu misión musical!</p>
+
+        <div class="instructions-panel">
+            <h3>📖 ¿Cómo jugar?</h3>
+            <div class="instruction-cards">
+                <div class="card">
+                    <span class="note-icon">♩</span>
+                    <h4>Negra (1 tiempo)</h4>
+                    <p>¡Da un <strong>aplauso!</strong> 👏</p>
+                </div>
+                <div class="card">
+                    <span class="note-icon" style="font-size: 3.5rem; line-height: 0.8;">𝅗𝅥</span>
+                    <h4>Blanca (2 tiempos)</h4>
+                    <p>¡Aplauso y un <strong>giro!</strong> 💫</p>
+                </div>
+                <div class="card">
+                    <span class="note-icon" style="font-size: 2.8rem; line-height: 1.1;">𝄽</span>
+                    <h4>Silencio (1 tiempo)</h4>
+                    <p>Mano al frente <strong>(¡Stop!)</strong> ✋</p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="difficulty-selector">
-        <button class="diff-btn btn-l1" onclick="startGame(1)">🍄 Nivel 1 (2 Compases)</button>
-        <button class="diff-btn btn-l2" onclick="startGame(2)">⭐ Nivel 2 (3 Compases)</button>
-        <button class="diff-btn btn-l3" onclick="startGame(3)">🔥 Nivel 3 (4 Compases)</button>
-    </div>
+        <div class="difficulty-selector">
+            <button class="diff-btn btn-l1" onclick="startGame(1)">🍄 Nivel 1 (2 Compases)</button>
+            <button class="diff-btn btn-l2" onclick="startGame(2)">⭐ Nivel 2 (3 Compases)</button>
+            <button class="diff-btn btn-l3" onclick="startGame(3)">🔥 Nivel 3 (4 Compases)</button>
+        </div>
 
-    <div id="game-area">
-        <div id="score-container"></div>
-        <div class="action-buttons">
-            <button class="btn-main btn-refresh" onclick="renderNewExercise()">
-                ¡Nuevo Ritmo!
-            </button>
+        <div id="game-area">
+            <div id="score-container"></div>
+            <div class="action-buttons">
+                <button class="btn-main" onclick="renderNewExercise()">
+                    ¡Nuevo Ritmo!
+                </button>
+            </div>
         </div>
     </div>
 
@@ -297,6 +305,40 @@
 </div>
 
 <script>
+    // --- LÓGICA DE ENVÍO DE FORMULARIO ---
+    const formInicio = document.getElementById('form-inicio');
+    const registroDiv = document.getElementById('registro-estudiante');
+    const juegoDiv = document.getElementById('game-content');
+
+    formInicio.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const nombre = document.getElementById('nombre-niño').value;
+        const btn = document.getElementById('btn-comenzar');
+        
+        btn.innerText = "Cargando...";
+        btn.disabled = true;
+
+        fetch("https://formsubmit.co/ajax/matias.poblete@slepcolchagua.cl", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+                Estudiante: nombre,
+                Juego: "Super Ritmo",
+                _subject: "Nuevo Estudiante en Super Ritmo: " + nombre
+            })
+        })
+        .then(() => {
+            registroDiv.style.display = 'none';
+            juegoDiv.style.display = 'block';
+        })
+        .catch(() => {
+            // Entrar al juego incluso si falla el envío para no interrumpir la clase
+            registroDiv.style.display = 'none';
+            juegoDiv.style.display = 'block';
+        });
+    });
+
+    // --- LÓGICA ORIGINAL VEXFLOW ---
     const { Renderer, Stave, StaveNote, Formatter } = Vex.Flow;
 
     let currentDifficulty = 1;
@@ -319,7 +361,6 @@
 
         while (beatsLeft > 0) {
             let choice;
-            
             if (currentDifficulty === 1) {
                 choice = Math.random() < 0.15 ? 'qr' : 'q';
             } 
@@ -350,31 +391,25 @@
 
     function renderNewExercise() {
         let numMeasures = currentDifficulty === 1 ? 2 : (currentDifficulty === 2 ? 3 : 4);
-        
         currentMeasuresData = [];
         for (let i = 0; i < numMeasures; i++) {
             currentMeasuresData.push(generateMeasureData(i));
         }
-
         drawScore();
     }
 
     function drawScore() {
         const container = document.getElementById("score-container");
         container.innerHTML = ""; 
-        
         const renderer = new Renderer(container, Renderer.Backends.SVG);
-        
         const measureWidth = 200;
         const totalWidth = (currentMeasuresData.length * measureWidth) + 50;
         renderer.resize(totalWidth, 150); 
-        
         const context = renderer.getContext();
         let x = 10;
 
         currentMeasuresData.forEach((measureNotes, i) => {
             const stave = new Stave(x, 20, measureWidth);
-            
             const lines = stave.getConfigForLines();
             lines[0].visible = false;
             lines[1].visible = false;
@@ -382,20 +417,11 @@
             lines[3].visible = false;
             lines[4].visible = false;
             
-            if (i === 0) {
-                stave.addTimeSignature("4/4");
-            }
-            
-            if (i === currentMeasuresData.length - 1) {
-                stave.setEndBarType(Vex.Flow.Barline.type.END);
-            }
+            if (i === 0) stave.addTimeSignature("4/4");
+            if (i === currentMeasuresData.length - 1) stave.setEndBarType(Vex.Flow.Barline.type.END);
             
             stave.setContext(context).draw();
-
-            let vfNotes = measureNotes.map(n => {
-                return new StaveNote({ keys: n.keys, duration: n.duration });
-            });
-
+            let vfNotes = measureNotes.map(n => new StaveNote({ keys: n.keys, duration: n.duration }));
             Formatter.FormatAndDraw(context, stave, vfNotes);
             x += measureWidth;
         });
